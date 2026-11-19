@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tender_copy_wizard_form" model="ir.ui.view">
+        <field name="name">tender.copy.wizard.form</field>
+        <field name="model">tender.copy.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Start from Earlier Tender">
+                <sheet>
+                    <p class="text-muted">
+                        Select an existing tender to clone its requirement assessments, 24-document checklist,
+                        and BOQ cost build-up lines as an editable starting point (Spec Section 7.6).
+                    </p>
+                    <group>
+                        <field name="target_tender_id" readonly="1" options="{'no_open': True}"/>
+                        <field name="source_tender_id" options="{'no_create': True, 'no_edit': True}"/>
+                    </group>
+                    <group string="Elements to Copy">
+                        <field name="copy_assessments"/>
+                        <field name="copy_checklist"/>
+                        <field name="copy_boq"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_copy_tender_data" string="Clone Tender Data" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tender_copy_wizard" model="ir.actions.act_window">
+        <field name="name">Start from Earlier Tender</field>
+        <field name="res_model">tender.copy.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tender / User: Sales Engineer, Office Manager -->
+    <record id="group_tender_user" model="res.groups">
+        <field name="name">Tender / User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Create and edit own tenders, checklists, cost build-up, and recovery activities.</field>
+    </record>
+
+    <!-- Tender / Reviewer: EDM -->
+    <record id="group_tender_reviewer" model="res.groups">
+        <field name="name">Tender / Reviewer (EDM)</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Review tender requirements, documents, BOQ information, and decision records.</field>
+    </record>
+
+    <!-- Tender / Approver: DM, DGM, GM -->
+    <record id="group_tender_approver" model="res.groups">
+        <field name="name">Tender / Approver (DM / DGM / GM)</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Authorize Go/No-Go decisions, approve pricing basis, sign packages, and approve bid security.</field>
+    </record>
+
+    <!-- Tender / Finance: Finance confirmations -->
+    <record id="group_tender_finance" model="res.groups">
+        <field name="name">Tender / Finance</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Execute tender document transfers, accounting entries, and confirm bid security return.</field>
+    </record>
+
+    <!-- Tender / Library Owner: Sales Engineers, EDM -->
+    <record id="group_tender_library_owner" model="res.groups">
+        <field name="name">Tender / Library Owner</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('documents.group_documents_user'))]"/>
+        <field name="comment">Manage tender templates, reusable company profile documents, licences, and certificates.</field>
+    </record>
+
+    <!-- Tender / Administrator: System Administrator -->
+    <record id="group_tender_manager" model="res.groups">
+        <field name="name">Tender / Administrator</field>
+        <field name="implied_ids" eval="[(4, ref('group_tender_approver')), (4, ref('group_tender_library_owner'))]"/>
+        <field name="all_user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full administrative control over ACME Tender Management.</field>
+    </record>
+
+    <!-- Tender CRM access is scoped to tender opportunities. This lets tender
+         roles work without granting them general CRM access. -->
+    <record id="rule_tender_crm_roles" model="ir.rule">
+        <field name="name">Tender roles: tender opportunities only</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="domain_force">[('x_is_tender', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('group_tender_user')), (4, ref('group_tender_reviewer')), (4, ref('group_tender_approver')), (4, ref('group_tender_finance'))]"/>
+    </record>
+    <record id="rule_tender_sale_order_roles" model="ir.rule">
+        <field name="name">Tender roles: tender quotations only</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="domain_force">[('x_is_tender_quotation', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('group_tender_user')), (4, ref('group_tender_reviewer')), (4, ref('group_tender_approver')), (4, ref('group_tender_finance')), (4, ref('group_tender_manager'))]"/>
+    </record>
+    <record id="rule_tender_sale_order_line_roles" model="ir.rule">
+        <field name="name">Tender roles: tender quotation lines only</field>
+        <field name="model_id" ref="sale.model_sale_order_line"/>
+        <field name="domain_force">[('order_id.x_is_tender_quotation', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('group_tender_user')), (4, ref('group_tender_reviewer')), (4, ref('group_tender_approver')), (4, ref('group_tender_finance')), (4, ref('group_tender_manager'))]"/>
+    </record>
+</odoo>

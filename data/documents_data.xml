@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Root: Tender Library -->
+        <record id="folder_tender_library" model="documents.document">
+            <field name="name">Tender library</field>
+            <field name="type">folder</field>
+        </record>
+
+        <!-- Subfolders under Tender Library -->
+        <record id="folder_tender_lib_templates" model="documents.document">
+            <field name="name">Templates</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_licences" model="documents.document">
+            <field name="name">Licences</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_poa" model="documents.document">
+            <field name="name">Power of attorney</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_financial" model="documents.document">
+            <field name="name">Financial</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_certificates" model="documents.document">
+            <field name="name">Certificates</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_methodology" model="documents.document">
+            <field name="name">Methodology</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_equipment" model="documents.document">
+            <field name="name">Equipment</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_personnel" model="documents.document">
+            <field name="name">Personnel</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <record id="folder_tender_lib_profile" model="documents.document">
+            <field name="name">Company profile</field>
+            <field name="type">folder</field>
+            <field name="folder_id" ref="folder_tender_library"/>
+        </record>
+
+        <!-- Root: Tenders -->
+        <record id="folder_tenders_root" model="documents.document">
+            <field name="name">Tenders</field>
+            <field name="type">folder</field>
+        </record>
+    </data>
+</odoo>
+

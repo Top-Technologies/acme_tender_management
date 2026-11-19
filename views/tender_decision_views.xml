@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tender_decision_tree" model="ir.ui.view">
+        <field name="name">tender.decision.list</field>
+        <field name="model">tender.decision</field>
+        <field name="arch" type="xml">
+            <list string="Go/No-Go Decisions" decoration-success="decision == 'go' and state == 'approved'" decoration-warning="decision == 'conditional_go'" decoration-danger="decision == 'no_go' or state == 'rejected'">
+                <field name="name"/>
+                <field name="tender_id"/>
+                <field name="decision"/>
+                <field name="state"/>
+                <field name="recommended_by_id"/>
+                <field name="reviewed_by_id"/>
+                <field name="reviewed_date"/>
+                <field name="authorized_by_id"/>
+                <field name="approval_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_decision_form" model="ir.ui.view">
+        <field name="name">tender.decision.form</field>
+        <field name="model">tender.decision</field>
+        <field name="arch" type="xml">
+            <form string="Go / No-Go Decision Record">
+                <header>
+                    <button name="action_submit_for_review" string="Submit to EDM" type="object" class="btn-primary" invisible="not x_can_submit_for_review"/>
+                    <button name="action_review_edm" string="Endorse / Review (EDM)" type="object" class="btn-info" invisible="not x_can_review_edm"/>
+                    <button name="action_approve" string="Authorize Decision (DM / DGM / GM)" type="object" class="btn-success" invisible="not x_can_authorize"/>
+                    <button name="action_reject" string="Reject / No-Go" type="object" class="btn-danger" invisible="not x_can_authorize or decision != 'no_go'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,reviewed,approved"/>
+                </header>
+                <sheet>
+                    <field name="x_can_submit_for_review" invisible="1"/>
+                    <field name="x_can_review_edm" invisible="1"/>
+                    <field name="x_can_authorize" invisible="1"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tender_id"/>
+                            <field name="decision" widget="radio"/>
+                            <field name="required_approval_role" readonly="state != 'submitted'"/>
+                        </group>
+                        <group>
+                            <field name="recommended_by_id"/>
+                            <field name="reviewed_by_id"/>
+                            <field name="reviewed_date" readonly="1"/>
+                            <field name="authorized_by_id" readonly="1"/>
+                            <field name="approval_role" readonly="1"/>
+                            <field name="approval_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Assessment Justification &amp; Strategic Reasons" colspan="2">
+                        <field name="reasons" nolabel="1" colspan="2" class="o_tender_decision_reasons" placeholder="Executive rationale for Go, Conditional Go, or No-Go decision..."/>
+                    </group>
+                    <notebook>
+                        <page string="Conditions &amp; Action Items" name="conditions">
+                            <p class="text-muted small">
+                                For Conditional Go decisions, every condition requires an assigned owner.
+                                Saving and authorizing this decision schedules tasks for the owners.
+                            </p>
+                            <field name="condition_ids">
+                                <list editable="bottom" decoration-success="is_done">
+                                    <field name="name"/>
+                                    <field name="owner_id"/>
+                                    <field name="due_date"/>
+                                    <field name="is_done"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>
+

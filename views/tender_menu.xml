@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action: Tender Pipeline (Kanban) -->
+    <record id="action_tender_pipeline" model="ir.actions.act_window">
+        <field name="name">Tender Pipeline</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_tender_kanban')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_crm_lead_tender_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_crm_lead_tender_form')}),
+        ]"/>
+        <field name="search_view_id" ref="view_crm_lead_tender_search"/>
+        <field name="domain">[('x_is_tender', '=', True)]</field>
+        <field name="context" eval="{'default_x_is_tender': True, 'default_type': 'opportunity', 'default_stage_id': ref('acme_tender_management.stage_tender_identified'), 'tender_pipeline_only': True, 'search_default_filter_active': 1}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first ACME Tender!
+            </p>
+            <p>
+                Track deadline-driven bids, cost build-ups, bid securities, and technical/financial openings.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action: All Tenders (List) -->
+    <record id="action_tender_all" model="ir.actions.act_window">
+        <field name="name">All Tenders</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_crm_lead_tender_tree')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_tender_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_crm_lead_tender_form')}),
+        ]"/>
+        <field name="search_view_id" ref="view_crm_lead_tender_search"/>
+        <field name="domain">[('x_is_tender', '=', True)]</field>
+        <field name="context" eval="{'default_x_is_tender': True, 'default_type': 'opportunity', 'default_stage_id': ref('acme_tender_management.stage_tender_identified'), 'tender_pipeline_only': True}"/>
+    </record>
+
+    <!-- Action: Tender Library in Documents -->
+    <record id="action_tender_library_documents" model="ir.actions.act_window">
+        <field name="name">Tender Library</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">kanban,list,form</field>
+        <!-- Resolve the XML ID while loading the action. Action domain/context are
+             evaluated in the browser, where the server-side ref() helper is absent. -->
+        <field name="domain">[('folder_id', 'child_of', %(folder_tender_library)d)]</field>
+        <field name="context">{'default_folder_id': %(folder_tender_library)d}</field>
+    </record>
+
+    <!-- Actions for Sub-records -->
+    <record id="action_tender_assessments" model="ir.actions.act_window">
+        <field name="name">Requirement Assessments</field>
+        <field name="res_model">tender.assessment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_decisions" model="ir.actions.act_window">
+        <field name="name">Go / No-Go Decisions</field>
+        <field name="res_model">tender.decision</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_checklists" model="ir.actions.act_window">
+        <field name="name">Submission Checklists</field>
+        <field name="res_model">tender.checklist</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_costlines" model="ir.actions.act_window">
+        <field name="name">BOQ Cost Build-up Lines</field>
+        <field name="res_model">tender.costline</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_opening_tech" model="ir.actions.act_window">
+        <field name="name">Technical Bid Openings [ACME/OF/74]</field>
+        <field name="res_model">tender.opening.tech</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_opening_fin" model="ir.actions.act_window">
+        <field name="name">Financial Bid Openings [ACME/OF/75]</field>
+        <field name="res_model">tender.opening.fin</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_tender_outcomes" model="ir.actions.act_window">
+        <field name="name">Final Outcomes</field>
+        <field name="res_model">tender.outcome</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+    </record>
+
+    <record id="action_tender_stages" model="ir.actions.act_window">
+        <field name="name">Tender Stages</field>
+        <field name="res_model">crm.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('x_is_tender_stage', '=', True)]</field>
+        <field name="context">{'default_x_is_tender_stage': True}</field>
+    </record>
+
+    <!-- Top-Level Menu: TENDERS APP (Spec Section 6.1) -->
+    <menuitem id="menu_tender_root"
+              name="Tenders"
+              web_icon="acme_tender_management,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- Main Navigation -->
+    <menuitem id="menu_tender_pipeline"
+              name="Pipeline"
+              parent="menu_tender_root"
+              action="action_tender_pipeline"
+              sequence="10"/>
+
+    <menuitem id="menu_tender_all"
+              name="All Tenders"
+              parent="menu_tender_root"
+              action="action_tender_all"
+              sequence="20"/>
+
+    <menuitem id="menu_tender_library"
+              name="Tender Library"
+              parent="menu_tender_root"
+              action="action_tender_library_documents"
+              sequence="30"/>
+
+    <!-- Operations Menu -->
+    <menuitem id="menu_tender_operations"
+              name="Operations"
+              parent="menu_tender_root"
+              sequence="40"/>
+
+    <menuitem id="menu_sub_tender_assessments"
+              name="Requirement Assessments"
+              parent="menu_tender_operations"
+              action="action_tender_assessments"
+              sequence="10"/>
+
+    <menuitem id="menu_sub_tender_decisions"
+              name="Go / No-Go Decisions"
+              parent="menu_tender_operations"
+              action="action_tender_decisions"
+              sequence="20"/>
+
+    <menuitem id="menu_sub_tender_checklists"
+              name="Submission Checklists"
+              parent="menu_tender_operations"
+              action="action_tender_checklists"
+              sequence="30"/>
+
+    <menuitem id="menu_sub_tender_costlines"
+              name="BOQ Costlines"
+              parent="menu_tender_operations"
+              action="action_tender_costlines"
+              sequence="40"/>
+
+    <menuitem id="menu_sub_tender_opening_tech"
+              name="Technical Openings"
+              parent="menu_tender_operations"
+              action="action_tender_opening_tech"
+              sequence="50"/>
+
+    <menuitem id="menu_sub_tender_opening_fin"
+              name="Financial Openings"
+              parent="menu_tender_operations"
+              action="action_tender_opening_fin"
+              sequence="60"/>
+
+    <menuitem id="menu_sub_tender_outcomes"
+              name="Final Outcomes"
+              parent="menu_tender_operations"
+              action="action_tender_outcomes"
+              sequence="70"/>
+
+    <!-- Reports Menu (Spec Section 12) -->
+    <menuitem id="menu_tender_reports"
+              name="Reporting"
+              parent="menu_tender_root"
+              sequence="50"/>
+
+    <menuitem id="menu_report_r08_performance"
+              name="R-08: Pipeline Performance"
+              parent="menu_tender_reports"
+              action="action_report_tender_performance_r08"
+              sequence="10"/>
+
+    <menuitem id="menu_report_r09_bid_security"
+              name="R-09: Open Bid Security Recovery"
+              parent="menu_tender_reports"
+              action="action_report_open_bid_security_r09"
+              sequence="20"/>
+
+    <menuitem id="menu_report_r10_win_loss"
+              name="R-10: Win / Loss Analysis"
+              parent="menu_tender_reports"
+              action="action_report_win_loss_r10"
+              sequence="30"/>
+
+    <menuitem id="menu_report_boq_completeness"
+              name="BOQ Completeness Check"
+              parent="menu_tender_reports"
+              action="action_report_boq_completeness"
+              sequence="40"/>
+
+    <menuitem id="menu_report_library_expiry"
+              name="Library Validity Review"
+              parent="menu_tender_reports"
+              action="action_report_library_expiry"
+              sequence="50"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_tender_configuration"
+              name="Configuration"
+              parent="menu_tender_root"
+              sequence="100"
+              groups="acme_tender_management.group_tender_manager"/>
+
+    <menuitem id="menu_config_tender_stages"
+              name="Tender Stages"
+              parent="menu_tender_configuration"
+              action="action_tender_stages"
+              sequence="10"/>
+
+    <menuitem id="menu_config_lost_reasons"
+              name="Lost Reasons"
+              parent="menu_tender_configuration"
+              action="crm.crm_lost_reason_action"
+              sequence="20"/>
+
+    <menuitem id="menu_config_approvals"
+              name="Approval Categories"
+              parent="menu_tender_configuration"
+              action="approvals.approval_category_action"
+              sequence="30"/>
+</odoo>
+

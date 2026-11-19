@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_cat_tender_cpo_request" model="approval.category">
+        <field name="approval_minimum">1</field>
+    </record>
+    <record id="approval_cat_tender_bank_guarantee" model="approval.category">
+        <field name="approval_minimum">1</field>
+    </record>
+</odoo>

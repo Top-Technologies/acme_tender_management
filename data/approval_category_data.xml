@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- 1. Tender document purchase -->
+        <record id="approval_cat_tender_doc_purchase" model="approval.category">
+            <field name="name">Tender Document Purchase</field>
+            <field name="description">EDM recommends; DM or DGM approves payment request for purchasing tender dossier.</field>
+            <field name="has_amount">required</field>
+            <field name="has_date">required</field>
+            <field name="has_partner">required</field>
+            <field name="requirer_document">optional</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 2. Go / No-Go decision -->
+        <record id="approval_cat_tender_go_no_go" model="approval.category">
+            <field name="name">Tender Go / No-Go Decision</field>
+            <field name="description">Sales Engineer recommends; EDM reviews; DM authorizes (DGM/GM for major bids).</field>
+            <field name="has_reference">required</field>
+            <field name="has_partner">required</field>
+            <field name="requirer_document">required</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 3. Pricing basis -->
+        <record id="approval_cat_tender_pricing_basis" model="approval.category">
+            <field name="name">Tender Pricing Basis</field>
+            <field name="description">EDM reviews pricing build-up; DM approves single margin and final bid price.</field>
+            <field name="has_amount">required</field>
+            <field name="requirer_document">required</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 4. Site visit [ACME/OF/71] -->
+        <record id="approval_cat_tender_site_visit" model="approval.category">
+            <field name="name">Tender Site Visit [ACME/OF/71]</field>
+            <field name="description">Site visit request authorized by DM or DGM before bid security.</field>
+            <field name="has_date">required</field>
+            <field name="has_location">required</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 5. CPO request -->
+        <record id="approval_cat_tender_cpo_request" model="approval.category">
+            <field name="name">Tender CPO Request</field>
+            <field name="description">DM checks; DGM or GM authorizes CPO issuance for bid security.</field>
+            <field name="has_amount">required</field>
+            <field name="has_partner">required</field>
+            <field name="has_date">required</field>
+            <field name="requirer_document">optional</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 6. Bank guarantee request -->
+        <record id="approval_cat_tender_bank_guarantee" model="approval.category">
+            <field name="name">Tender Bank Guarantee Request</field>
+            <field name="description">DM checks; GM authorizes bank guarantee issuance per Authorization Limits Table.</field>
+            <field name="has_amount">required</field>
+            <field name="has_partner">required</field>
+            <field name="has_date">required</field>
+            <field name="requirer_document">optional</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 7. Package sign-off -->
+        <record id="approval_cat_tender_package_signoff" model="approval.category">
+            <field name="name">Tender Package Sign-off</field>
+            <field name="description">DM or DGM signs and seals final assembled bid submission package.</field>
+            <field name="has_reference">required</field>
+            <field name="requirer_document">required</field>
+            <field name="approval_minimum">1</field>
+        </record>
+
+        <!-- 8. Correspondence letters -->
+        <record id="approval_cat_tender_correspondence" model="approval.category">
+            <field name="name">Tender Correspondence Letters</field>
+            <field name="description">Manager approval for official letters and clarifications sent to tender issuer.</field>
+            <field name="has_partner">required</field>
+            <field name="requirer_document">required</field>
+            <field name="approval_minimum">1</field>
+        </record>
+    </data>
+</odoo>
+

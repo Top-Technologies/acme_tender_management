@@ -1,0 +1,60 @@
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Odoo logs and temporary files
+*.log
+*.log.*
+*.pid
+*.dump
+*.bak
+
+# Python environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+*.orig
+*.rej
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Database backups
+*.sql
+*.sql.gz
+*.dump
+

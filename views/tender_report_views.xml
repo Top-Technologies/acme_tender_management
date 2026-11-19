@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- R-08: Tender Performance & Pipeline (Pivot & Graph) -->
+    <record id="view_tender_report_pivot" model="ir.ui.view">
+        <field name="name">crm.lead.tender.pivot</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <pivot string="R-08: Tender Performance &amp; Status">
+                <field name="stage_id" type="col"/>
+                <field name="partner_id" type="row"/>
+                <field name="expected_revenue" type="measure"/>
+                <field name="x_bid_security_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_tender_report_graph" model="ir.ui.view">
+        <field name="name">crm.lead.tender.graph</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <graph string="R-08: Tender Pipeline" type="bar">
+                <field name="stage_id"/>
+                <field name="expected_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_report_tender_performance_r08" model="ir.actions.act_window">
+        <field name="name">R-08: Pipeline Performance &amp; Status</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="domain">[('x_is_tender', '=', True)]</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+
+    <!-- R-09: Open Bid Security Recovery (Spec Section 8 & 12) -->
+    <record id="view_tender_open_bid_security_tree" model="ir.ui.view">
+        <field name="name">crm.lead.open.bid.security.list</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <list string="Open Bid Security Instruments" create="0" delete="0" decoration-warning="x_expected_return_date and x_expected_return_date &lt; current_date">
+                <field name="x_tender_code"/>
+                <field name="name" string="Tender Title"/>
+                <field name="partner_id" string="Client"/>
+                <field name="x_issuer_id" string="Procuring Authority"/>
+                <field name="x_bid_security_type"/>
+                <field name="x_bank_name"/>
+                <field name="x_bid_security_amount" widget="monetary" sum="Total Open Securities"/>
+                <field name="x_bid_security_issue_date"/>
+                <field name="x_expected_return_date"/>
+                <field name="x_bid_security_return_status"/>
+                <field name="stage_id"/>
+                <field name="x_outcome_type"/>
+                <field name="currency_id" column_invisible="True"/>
+                <button name="action_confirm_bid_security_return" string="Confirm Return" type="object" class="btn-sm btn-success" groups="acme_tender_management.group_tender_finance,acme_tender_management.group_tender_manager"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_report_open_bid_security_r09" model="ir.actions.act_window">
+        <field name="name">R-09: Open Bid Security Recovery</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="view_id" ref="view_tender_open_bid_security_tree"/>
+        <field name="domain">[('x_is_tender', '=', True), ('x_bid_security_return_status', '=', 'open')]</field>
+    </record>
+
+    <!-- R-10: Win/Loss Analysis -->
+    <record id="view_tender_outcome_pivot" model="ir.ui.view">
+        <field name="name">tender.outcome.pivot</field>
+        <field name="model">tender.outcome</field>
+        <field name="arch" type="xml">
+            <pivot string="R-10: Win / Loss Analysis">
+                <field name="outcome_type" type="col"/>
+                <field name="lost_reason_id" type="row"/>
+                <field name="acme_price" type="measure"/>
+                <field name="winning_price" type="measure"/>
+                <field name="price_variance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_tender_outcome_graph" model="ir.ui.view">
+        <field name="name">tender.outcome.graph</field>
+        <field name="model">tender.outcome</field>
+        <field name="arch" type="xml">
+            <graph string="R-10: Win / Loss Breakdown" type="pie">
+                <field name="outcome_type"/>
+                <field name="acme_price" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_report_win_loss_r10" model="ir.actions.act_window">
+        <field name="name">R-10: Win / Loss Analysis</field>
+        <field name="res_model">tender.outcome</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+    </record>
+
+    <!-- Completeness Check: BOQ Lines without Cost (Spec Section 7.4 & 12) -->
+    <record id="action_report_boq_completeness" model="ir.actions.act_window">
+        <field name="name">Completeness Check: BOQ Lines without Cost</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('order_id.x_is_tender_quotation', '=', True), ('x_cost_built', '=', False), ('display_type', '=', False), ('product_id', '!=', False)]</field>
+    </record>
+
+    <!-- Library Expiry Review (Spec Section 7.3 & 12) -->
+    <record id="action_report_library_expiry" model="ir.actions.act_window">
+        <field name="name">Library Validity &amp; Expiry Review</field>
+        <field name="res_model">tender.checklist</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('validity_date', '!=', False)]</field>
+        <field name="context">{'search_default_group_by_validity': 1}</field>
+    </record>
+</odoo>
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tender_assessment_tree" model="ir.ui.view">
+        <field name="name">tender.assessment.list</field>
+        <field name="model">tender.assessment</field>
+        <field name="arch" type="xml">
+            <list string="Requirement Assessment Lines" decoration-danger="failure_type == 'mandatory_failure'" decoration-warning="failure_type == 'manageable_risk'">
+                <field name="tender_id"/>
+                <field name="category"/>
+                <field name="requirement"/>
+                <field name="source_page_clause"/>
+                <field name="is_mandatory"/>
+                <field name="assessment"/>
+                <field name="failure_type"/>
+                <field name="owner_id"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_assessment_form" model="ir.ui.view">
+        <field name="name">tender.assessment.form</field>
+        <field name="model">tender.assessment</field>
+        <field name="arch" type="xml">
+            <form string="Requirement Assessment Line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tender_id"/>
+                            <field name="category"/>
+                            <field name="source_page_clause"/>
+                            <field name="is_mandatory"/>
+                        </group>
+                        <group>
+                            <field name="assessment"/>
+                            <field name="failure_type"/>
+                            <field name="status"/>
+                            <field name="owner_id"/>
+                        </group>
+                    </group>
+                    <group string="Requirement Description">
+                        <field name="requirement" nolabel="1"/>
+                    </group>
+                    <group string="Gap Analysis &amp; Action Plan">
+                        <field name="gap" placeholder="Identified gap or compliance deficiency..."/>
+                        <field name="evidence" placeholder="Evidence, standard certificate, or library document reference..."/>
+                        <field name="action" placeholder="Action required to close gap or mitigate risk..."/>
+                        <field name="attachment_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
+

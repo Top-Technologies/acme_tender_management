@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Technical Opening Views -->
+    <record id="view_tender_opening_tech_tree" model="ir.ui.view">
+        <field name="name">tender.opening.tech.list</field>
+        <field name="model">tender.opening.tech</field>
+        <field name="arch" type="xml">
+            <list string="Technical Bid Openings">
+                <field name="name"/>
+                <field name="tender_id"/>
+                <field name="opening_date"/>
+                <field name="acme_attendees"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_opening_tech_form" model="ir.ui.view">
+        <field name="name">tender.opening.tech.form</field>
+        <field name="model">tender.opening.tech</field>
+        <field name="arch" type="xml">
+            <form string="Technical Bid Opening Record [ACME/OF/74]">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tender &amp; Schedule">
+                            <field name="tender_id"/>
+                            <field name="opening_date"/>
+                            <field name="status"/>
+                        </group>
+                        <group string="Attendance &amp; Official Report">
+                            <field name="acme_attendees" placeholder="Names of ACME representatives..."/>
+                            <field name="report_attachment_id"/>
+                        </group>
+                    </group>
+                    <group string="Bidders Present &amp; Technical Results Read Out">
+                        <field name="bidders_present" placeholder="List of all participating companies..."/>
+                        <field name="read_out_results" placeholder="Preliminary compliance remarks read out..."/>
+                        <field name="acme_technical_findings" placeholder="Technical evaluation committee findings on ACME's offer..."/>
+                    </group>
+                    <notebook>
+                        <page string="Bidders Technical Readout" name="bidders">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="bidder_name"/>
+                                    <field name="is_acme"/>
+                                    <field name="status"/>
+                                    <field name="score"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Financial Opening Views -->
+    <record id="view_tender_opening_fin_tree" model="ir.ui.view">
+        <field name="name">tender.opening.fin.list</field>
+        <field name="model">tender.opening.fin</field>
+        <field name="arch" type="xml">
+            <list string="Financial Bid Openings">
+                <field name="name"/>
+                <field name="tender_id"/>
+                <field name="opening_date"/>
+                <field name="acme_position"/>
+                <field name="acme_quoted_price" widget="monetary"/>
+                <field name="lowest_bidder_price" widget="monetary"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_opening_fin_form" model="ir.ui.view">
+        <field name="name">tender.opening.fin.form</field>
+        <field name="model">tender.opening.fin</field>
+        <field name="arch" type="xml">
+            <form string="Financial Bid Opening Record [ACME/OF/75]">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tender &amp; ACME Position">
+                            <field name="tender_id"/>
+                            <field name="tech_opening_id"/>
+                            <field name="opening_date"/>
+                            <field name="acme_position"/>
+                        </group>
+                        <group string="Prices &amp; Official Report">
+                            <field name="acme_quoted_price" widget="monetary"/>
+                            <field name="lowest_bidder_price" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="acme_attendees"/>
+                            <field name="report_attachment_id"/>
+                        </group>
+                    </group>
+                    <group string="Financial Readout &amp; Evaluation Remarks">
+                        <field name="bidders_admitted" placeholder="Bidders qualified for financial stage..."/>
+                        <field name="notes" placeholder="Evaluation details, discount offers, arithmetic checks..."/>
+                    </group>
+                    <notebook>
+                        <page string="Bidders Financial Readout" name="financial_lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="rank"/>
+                                    <field name="bidder_name"/>
+                                    <field name="is_acme"/>
+                                    <field name="price" widget="monetary"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tender_outcome_tree" model="ir.ui.view">
+        <field name="name">tender.outcome.list</field>
+        <field name="model">tender.outcome</field>
+        <field name="arch" type="xml">
+            <list string="Tender Final Outcomes" decoration-success="outcome_type == 'won'" decoration-danger="outcome_type == 'lost'" decoration-muted="outcome_type in ('no_go', 'cancelled')">
+                <field name="name"/>
+                <field name="tender_id"/>
+                <field name="outcome_type"/>
+                <field name="winner_name"/>
+                <field name="winning_price" widget="monetary"/>
+                <field name="acme_price" widget="monetary"/>
+                <field name="price_variance" widget="monetary"/>
+                <field name="bid_security_recovery_status"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_outcome_form" model="ir.ui.view">
+        <field name="name">tender.outcome.form</field>
+        <field name="model">tender.outcome</field>
+        <field name="arch" type="xml">
+            <form string="Final Outcome Record">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Outcome Classification">
+                            <field name="tender_id"/>
+                            <field name="outcome_type"/>
+                            <field name="lost_reason_id" invisible="outcome_type == 'won'"/>
+                            <field name="bid_security_recovery_status"/>
+                        </group>
+                        <group string="Commercial Comparison">
+                            <field name="acme_price" widget="monetary"/>
+                            <field name="winner_name" invisible="outcome_type == 'won'"/>
+                            <field name="winning_price" widget="monetary" invisible="outcome_type == 'won'"/>
+                            <field name="price_variance" widget="monetary" invisible="outcome_type == 'won'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="award_letter_attachment_id"/>
+                        </group>
+                    </group>
+                    <group string="Opening Links">
+                        <field name="tech_opening_id"/>
+                        <field name="fin_opening_id"/>
+                    </group>
+                    <group string="Post-Mortem &amp; Strategic Notes">
+                        <field name="notes" placeholder="Lessons learned, competitor pricing intelligence, delivery terms..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>
+

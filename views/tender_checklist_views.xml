@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tender_checklist_tree" model="ir.ui.view">
+        <field name="name">tender.checklist.list</field>
+        <field name="model">tender.checklist</field>
+        <field name="arch" type="xml">
+            <list string="Submission Checklist" decoration-danger="not is_valid_for_tender" decoration-success="review_status == 'approved'">
+                <field name="sequence" widget="handle"/>
+                <field name="tender_id"/>
+                <field name="document_code"/>
+                <field name="name"/>
+                <field name="is_mandatory"/>
+                <field name="source_type"/>
+                <field name="library_document_id"/>
+                <field name="validity_date"/>
+                <field name="validity_warning" widget="badge" decoration-danger="1" invisible="is_valid_for_tender"/>
+                <field name="preparer_id"/>
+                <field name="preparation_status"/>
+                <field name="reviewer_id"/>
+                <field name="review_status"/>
+                <field name="due_date"/>
+                <field name="is_valid_for_tender" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_tender_checklist_form" model="ir.ui.view">
+        <field name="name">tender.checklist.form</field>
+        <field name="model">tender.checklist</field>
+        <field name="arch" type="xml">
+            <form string="Checklist Document Line">
+                <header>
+                    <button name="action_mark_ready" string="Mark Ready for Review" type="object" class="btn-primary" invisible="preparation_status == 'ready'"/>
+                    <button name="action_approve" string="Approve" type="object" class="btn-success" invisible="review_status == 'approved'"/>
+                    <button name="action_reject" string="Reject / Needs Revision" type="object" class="btn-danger" invisible="review_status == 'rejected'"/>
+                    <field name="review_status" widget="statusbar" statusbar_visible="pending,approved"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert" invisible="is_valid_for_tender">
+                        <i class="fa fa-exclamation-circle me-2" title="Warning"/>
+                        <field name="validity_warning" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Document Details">
+                            <field name="tender_id"/>
+                            <field name="document_code"/>
+                            <field name="name"/>
+                            <field name="is_mandatory"/>
+                            <field name="source_type"/>
+                        </group>
+                        <group string="Library Link &amp; Validity">
+                            <field name="library_document_id"/>
+                            <field name="document_version"/>
+                            <field name="validity_date"/>
+                            <field name="due_date"/>
+                            <field name="is_valid_for_tender" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Responsibility">
+                            <field name="preparer_id"/>
+                            <field name="preparation_status"/>
+                        </group>
+                        <group string="Verification &amp; Approval">
+                            <field name="checker_id"/>
+                            <field name="reviewer_id"/>
+                        </group>
+                    </group>
+                    <group string="Attachment &amp; Notes">
+                        <field name="attachment_id"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

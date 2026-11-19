@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_tender" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.tender</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_apply_overall_margin" string="Apply Single Tender Margin" type="object" class="btn-outline-primary" invisible="not x_is_tender_quotation or state not in ('draft', 'sent')"/>
+                <button name="action_create_tender_revision" string="New Tender Revision (R+1)" type="object" class="btn-outline-secondary" invisible="not x_is_tender_quotation"/>
+                <button name="action_approve_tender_quotation" string="Approve Tender Quotation" type="object" class="btn-success" invisible="not x_can_approve_tender_quotation"/>
+                <button name="action_reapprove_expired_tender_quotation" string="Approve Re-quotation (DM)" type="object" class="btn-warning" invisible="not x_can_reapprove_tender_quotation"/>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="x_is_tender_quotation" invisible="1"/>
+                <field name="x_can_approve_tender_quotation" invisible="1"/>
+                <field name="x_can_reapprove_tender_quotation" invisible="1"/>
+                <field name="x_can_confirm_tender_quotation" invisible="1"/>
+                <field name="x_tender_id" invisible="not x_is_tender_quotation" readonly="state != 'draft'"/>
+                <field name="x_tender_revision" invisible="not x_is_tender_quotation" readonly="1"/>
+                <field name="x_tender_approval_user_id" invisible="not x_is_tender_quotation" readonly="1"/>
+                <field name="x_tender_approval_role" invisible="not x_is_tender_quotation" readonly="1"/>
+                <field name="x_tender_approval_date" invisible="not x_is_tender_quotation" readonly="1"/>
+                <field name="x_tender_approval_amount" invisible="not x_is_tender_quotation" readonly="1"/>
+                <field name="x_tender_requotation_approved_by_id" invisible="not x_is_tender_quotation" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_confirm' and @id='action_confirm']" position="attributes">
+                <attribute name="invisible">state != 'sent' or (x_is_tender_quotation and not x_can_confirm_tender_quotation)</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm' and not(@id)]" position="attributes">
+                <attribute name="invisible">state != 'draft' or (x_is_tender_quotation and not x_can_confirm_tender_quotation)</attribute>
+            </xpath>
+
+            <!-- BOQ Single-Margin & Completeness Panel for Tenders -->
+            <xpath expr="//notebook" position="before">
+                <div class="row bg-light p-2 mb-2 rounded border" invisible="not x_is_tender_quotation">
+                    <div class="col-md-3">
+                        <label for="x_tender_margin_percent" class="fw-bold" string="Tender Markup Margin %:"/>
+                        <div class="d-flex align-items-center">
+                            <field name="x_tender_margin_percent" class="me-2" style="width: 80px;"/>
+                            <button name="action_apply_overall_margin" string="Apply" type="object" class="btn btn-sm btn-primary"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted small d-block">Rolled-up Cost Total:</span>
+                        <field name="x_total_built_up_cost" widget="monetary" class="fw-bold fs-6"/>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="text-muted small d-block">Total Margin Added:</span>
+                        <field name="x_total_tender_margin" widget="monetary" class="fw-bold fs-6 text-success"/>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center">
+                        <span class="badge bg-success p-2 fs-7" invisible="not x_boq_is_complete"><i class="fa fa-check me-1" title="Complete"/> BOQ Ready</span>
+                        <span class="badge bg-warning text-dark p-2 fs-7" invisible="x_boq_is_complete"><i class="fa fa-exclamation-triangle me-1" title="Incomplete"/> BOQ Incomplete</span>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Tender quotation totals: standard Odoo totals, surfaced next to the tender costing panel. -->
+            <xpath expr="//notebook" position="before">
+                <div class="row bg-white p-2 mb-2 rounded border" invisible="not x_is_tender_quotation">
+                    <div class="col-md-4">
+                        <span class="text-muted small d-block">Quotation Untaxed:</span>
+                        <field name="amount_untaxed" widget="monetary" class="fw-bold"/>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-muted small d-block">Quotation VAT:</span>
+                        <field name="amount_tax" widget="monetary" class="fw-bold"/>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-muted small d-block">Quotation Total:</span>
+                        <field name="amount_total" widget="monetary" class="fw-bold fs-5 text-success"/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Add Rolled-up Cost and Margin to Quotation Lines -->
+            <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="before">
+                <field name="x_bill_no" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_item_ref" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_bill_category_id" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_boq_unit_rate" widget="monetary" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_boq_amount" widget="monetary" optional="show" column_invisible="not parent.x_is_tender_quotation" sum="Total BOQ Amount"/>
+                <field name="x_rolled_up_cost" widget="monetary" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_unit_cost" widget="monetary" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_margin_percent" optional="show" column_invisible="not parent.x_is_tender_quotation"/>
+                <field name="x_cost_built" optional="hide" column_invisible="not parent.x_is_tender_quotation"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/list//field[@name='name']" position="attributes">
+                <attribute name="width">600px</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

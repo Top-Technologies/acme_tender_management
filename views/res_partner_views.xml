@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_tender" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.tender</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_tenders" type="object" class="oe_stat_button" icon="fa-gavel" invisible="x_tender_count == 0">
+                    <field name="x_tender_count" widget="statinfo" string="Tenders"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Tenders History" name="tenders_tab">
+                    <field name="x_tender_ids" readonly="1">
+                        <list decoration-success="x_outcome_type == 'won'" decoration-danger="x_outcome_type == 'lost'">
+                            <field name="x_tender_code"/>
+                            <field name="name" string="Tender Title"/>
+                            <field name="x_tender_number"/>
+                            <field name="x_submission_deadline"/>
+                            <field name="stage_id"/>
+                            <field name="x_outcome_type"/>
+                            <field name="x_winner_name"/>
+                            <field name="x_winning_price" widget="monetary"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
